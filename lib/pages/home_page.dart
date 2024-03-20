@@ -7,9 +7,9 @@ import 'package:depr_ai/data/question_model.dart';
 import 'package:depr_ai/helper.dart';
 import 'package:depr_ai/ui/atoms/floating_next_button.dart';
 import 'package:depr_ai/ui/atoms/image_icon_view.dart';
+import 'package:depr_ai/ui/atoms/option.dart';
 import 'package:depr_ai/ui/atoms/progress_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,12 +23,20 @@ class _HomePageState extends State<HomePage> {
   int currentQue = 0;
   void _onbackPress() {
     if (currentQue == 0) {
-      CustomNavigator.pop(context);
+      // CustomNavigator.pop(context);
     } else {
       setState(() {
         currentQue -= 1;
       });
     }
+  }
+
+  void _onTapNext() {
+    if ((currentQue + 1) < questions.length) {
+      setState(() {
+        currentQue += 1;
+      });
+    } else {}
   }
 
   @override
@@ -43,12 +51,9 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: AppColors.WHITE,
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
           floatingActionButton: FloatingNextButton(
-              isDisabled: false,
-              onTap: () {
-                setState(() {
-                  currentQue += 1;
-                });
-              }),
+            isDisabled: questions[currentQue].selectedIndex == null,
+            onTap: _onTapNext,
+          ),
           body: SingleChildScrollView(
             child: Column(
               children: [
@@ -85,7 +90,7 @@ class _HomePageState extends State<HomePage> {
                             Center(
                               child: RichText(
                                 text: TextSpan(
-                                  text: "$currentQue",
+                                  text: "${currentQue + 1}",
                                   style: AppStyles.s16_blod_black,
                                   children: [
                                     TextSpan(
@@ -102,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24),
                         child: ProgressBar(
-                          dValue: currentQue / questions.length,
+                          dValue: (currentQue + 1) / questions.length,
                           dHeight: 3,
                           progressBarSize: ProgressBarSizes.small,
                           bShowLabel: true,
@@ -134,13 +139,20 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
-                Container(
-                  color: AppColors.WHITE,
-                  child: const Text(
-                    "",
-                    style: TextStyle(fontSize: 64),
-                  ),
-                ),
+                CustomSpacers.height40,
+                ...List.generate(questions[currentQue].answers.length, (index) {
+                  String option = questions[currentQue].answers[index];
+                  bool isSelected = index == questions[currentQue].selectedIndex;
+                  return Option(
+                    onTap: () {
+                      setState(() {
+                        questions[currentQue].selectedIndex = index;
+                      });
+                    },
+                    isSelected: isSelected,
+                    option: option,
+                  );
+                }),
                 CustomSpacers.height74,
               ],
             ),
