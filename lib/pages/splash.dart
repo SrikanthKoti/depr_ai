@@ -17,7 +17,7 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     Future.delayed(const Duration(seconds: 3), () async {
       Utils.printLogs('Splash for few seconds !!!');
-      CustomNavigator.popUntilFirstAndPush(context, AppPages.pageOnboarding);
+      CustomNavigator.pushReplace(context, AppPages.pageOnboarding);
     });
     super.initState();
   }

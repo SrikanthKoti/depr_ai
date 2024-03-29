@@ -2,6 +2,7 @@ import 'package:depr_ai/app/constants/app_colors.dart';
 import 'package:depr_ai/app/constants/app_images.dart';
 import 'package:depr_ai/app/constants/app_styles.dart';
 import 'package:depr_ai/app/constants/custom_spacers.dart';
+import 'package:depr_ai/app/router/app_pages.dart';
 import 'package:depr_ai/app/router/custom_navigator.dart';
 import 'package:depr_ai/data/question_model.dart';
 import 'package:depr_ai/helper.dart';
@@ -36,7 +37,20 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         currentQue += 1;
       });
-    } else {}
+    } else {
+      List<int?> answers = questions.map((que) => que.selectedIndex).toList();
+      CustomNavigator.popUntilFirstAndPush(
+        context,
+        AppPages.pageScore,
+        arguments: {"answers": answers},
+      );
+    }
+  }
+
+  void _onOptionSelect(int optionIndex) {
+    setState(() {
+      questions[currentQue].selectedIndex = optionIndex;
+    });
   }
 
   @override
@@ -67,26 +81,27 @@ class _HomePageState extends State<HomePage> {
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
-                            GestureDetector(
-                              onTap: () {
-                                _onbackPress();
-                              },
-                              child: Row(
-                                children: [
-                                  const ImageIconView(
-                                    assetPath: AppImages.ICON_BACK,
-                                    iconColor: AppColors.BLACK,
-                                    dHeight: 12,
-                                    dWidth: 16,
-                                  ),
-                                  CustomSpacers.width2,
-                                  Text(
-                                    "Back",
-                                    style: AppStyles.s16_w500_black,
-                                  )
-                                ],
+                            if (currentQue != 0)
+                              GestureDetector(
+                                onTap: () {
+                                  _onbackPress();
+                                },
+                                child: Row(
+                                  children: [
+                                    const ImageIconView(
+                                      assetPath: AppImages.ICON_BACK,
+                                      iconColor: AppColors.BLACK,
+                                      dHeight: 12,
+                                      dWidth: 16,
+                                    ),
+                                    CustomSpacers.width2,
+                                    Text(
+                                      "Back",
+                                      style: AppStyles.s16_w500_black,
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
                             Center(
                               child: RichText(
                                 text: TextSpan(
@@ -145,9 +160,7 @@ class _HomePageState extends State<HomePage> {
                   bool isSelected = index == questions[currentQue].selectedIndex;
                   return Option(
                     onTap: () {
-                      setState(() {
-                        questions[currentQue].selectedIndex = index;
-                      });
+                      _onOptionSelect(index);
                     },
                     isSelected: isSelected,
                     option: option,
