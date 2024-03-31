@@ -1,4 +1,5 @@
 import 'package:depr_ai/app/router/app_pages.dart';
+import 'package:depr_ai/datasource/submit_questioner_datasource.dart';
 import 'package:depr_ai/pages/home_page.dart';
 import 'package:depr_ai/pages/onboarding_page.dart';
 import 'package:depr_ai/pages/score_page.dart';
@@ -19,7 +20,7 @@ class AppRoutes {
         var args = settings.arguments != null ? settings.arguments as Map<String, dynamic> : {};
         return MaterialPageRoute(
           builder: (context) => ScorePage(
-            answers: args.containsKey("answers") ? args["answers"] : [],
+            scoreData: args.containsKey("scoreData") ? args["scoreData"] : {},
           ),
         );
       default:
