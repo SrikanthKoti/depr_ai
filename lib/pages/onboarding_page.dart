@@ -87,13 +87,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       style: AppStyles.s16_w500_747474,
                     ),
                     CustomSpacers.height24,
-                    if (hasPaidMoney)
-                      FloatingNextButton(
-                        isDisabled: false,
-                        onTap: () {
-                          callMoneyFlag();
-                        },
-                      ),
+                    FloatingNextButton(
+                      isDisabled: false,
+                      onTap: () {
+                        callMoneyFlag();
+                      },
+                      btnText: "Start",
+                    ),
                   ],
                 ),
               )
