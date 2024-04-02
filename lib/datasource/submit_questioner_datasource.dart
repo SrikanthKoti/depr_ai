@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:depr_ai/data/submit_questioner_request_model.dart';
 import 'package:depr_ai/data/submit_questioner_response_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -9,10 +10,10 @@ class SubmitQuestionerDataSource {
   final CustomHttpClient client;
   SubmitQuestionerDataSource({required this.client});
 
-  Future<Response> dataSourceMethod(List<int> options) async {
+  Future<Response> dataSourceMethod(SubmitQuestionerRequestModel requestModel) async {
     final http.Response response = await client.post(
       Uri.parse("https://depression-api.vercel.app/api/depression"),
-      jsonEncode({"options": options}),
+      jsonEncode(requestModel.toJson()),
     );
     int nResponseCode = response.statusCode;
     if (nResponseCode == 200) {

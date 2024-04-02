@@ -6,6 +6,7 @@ import 'package:depr_ai/app/custom_http_client.dart';
 import 'package:depr_ai/app/router/app_pages.dart';
 import 'package:depr_ai/app/router/custom_navigator.dart';
 import 'package:depr_ai/data/question_model.dart';
+import 'package:depr_ai/data/submit_questioner_request_model.dart';
 import 'package:depr_ai/data/submit_questioner_response_model.dart';
 import 'package:depr_ai/datasource/response.dart';
 import 'package:depr_ai/datasource/submit_questioner_datasource.dart';
@@ -30,7 +31,8 @@ class _HomePageState extends State<HomePage> {
   int currentQue = 0;
   final CustomHttpClient client = CustomHttpClient();
   late SubmitQuestionerDataSource submitQuestionerDataSource;
-
+  SubmitQuestionerRequestModel request = SubmitQuestionerRequestModel(
+      age: 0, gender: '', maritalStatus: '', employmentStatus: '', options: []);
   @override
   void initState() {
     client.initialise();
@@ -49,9 +51,56 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onOptionSelect(int optionIndex) {
-    setState(() {
-      questions[currentQue].selectedIndex = optionIndex;
-    });
+    switch (questions[currentQue].type) {
+      case QuestionType.age:
+        if (optionIndex >= 0 && optionIndex <= 100) {
+          request.age = optionIndex;
+        } else {
+          request.age = 0;
+          Fluttertoast.showToast(
+            msg: "Invalid age entered",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+        }
+
+        break;
+      case QuestionType.gender:
+        request.gender = questions[currentQue].answers[optionIndex];
+        questions[currentQue].selectedIndex = optionIndex;
+        break;
+      case QuestionType.maritalStatus:
+        request.maritalStatus = questions[currentQue].answers[optionIndex];
+        questions[currentQue].selectedIndex = optionIndex;
+        break;
+      case QuestionType.employmentStatus:
+        request.employmentStatus = questions[currentQue].answers[optionIndex];
+        questions[currentQue].selectedIndex = optionIndex;
+        break;
+      default:
+        questions[currentQue].selectedIndex = optionIndex;
+        break;
+    }
+    setState(() {});
+  }
+
+  bool _nextBtnIsDisabled() {
+    switch (questions[currentQue].type) {
+      case QuestionType.age:
+        return request.age == 0;
+      case QuestionType.gender:
+        return request.gender.isEmpty;
+      case QuestionType.maritalStatus:
+        return request.maritalStatus.isEmpty;
+      case QuestionType.employmentStatus:
+        return request.employmentStatus.isEmpty;
+      default:
+        return questions[currentQue].selectedIndex == null;
+    }
   }
 
   @override
@@ -67,19 +116,19 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: AppColors.WHITE,
             floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
             floatingActionButton: FloatingNextButton(
-              isDisabled: questions[currentQue].selectedIndex == null,
+              isDisabled: _nextBtnIsDisabled(),
               onTap: () async {
                 if ((currentQue + 1) < questions.length) {
                   setState(() {
                     currentQue += 1;
                   });
                 } else {
-                  List<int> answers = [0, 2, 1, 2, 3, 1, 2, 3, 2, 1];
-                  //questions.map((que) => que.selectedIndex ?? 0).toList();
-                  print(answers);
-                  // [0, 2, 1, 2, 3, 1, 2, 3, 2, 1]
+                  request.options =
+                      questions.map((que) => que.selectedIndex ?? 0).toList().sublist(4);
+
                   context.loaderOverlay.show();
-                  Response res = await submitQuestionerDataSource.dataSourceMethod(answers);
+
+                  Response res = await submitQuestionerDataSource.dataSourceMethod(request);
 
                   if (res.isSuccess) {
                     if (context.mounted) {
@@ -187,7 +236,9 @@ class _HomePageState extends State<HomePage> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 24),
                           child: Text(
-                            "Select any one",
+                            questions[currentQue].type != QuestionType.age
+                                ? "Select any one"
+                                : "Please enter your age (1 to 100)",
                             style: AppStyles.s16_w500_747474,
                           ),
                         ),
@@ -196,17 +247,48 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   CustomSpacers.height40,
-                  ...List.generate(questions[currentQue].answers.length, (index) {
-                    String option = questions[currentQue].answers[index];
-                    bool isSelected = index == questions[currentQue].selectedIndex;
-                    return Option(
-                      onTap: () {
-                        _onOptionSelect(index);
-                      },
-                      isSelected: isSelected,
-                      option: option,
-                    );
-                  }),
+                  if (questions[currentQue].type != QuestionType.age)
+                    ...List.generate(questions[currentQue].answers.length, (index) {
+                      String option = questions[currentQue].answers[index];
+                      bool isSelected = index == questions[currentQue].selectedIndex;
+                      return Option(
+                        onTap: () {
+                          _onOptionSelect(index);
+                        },
+                        isSelected: isSelected,
+                        option: option,
+                      );
+                    }),
+                  if (questions[currentQue].type == QuestionType.age)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        onChanged: (val) {
+                          _onOptionSelect(int.tryParse(val) ?? 0);
+                        },
+                        decoration: const InputDecoration(
+                          hintText: "Age",
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: AppColors.C_28CBB0),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(12),
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: AppColors.DADADA),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(12),
+                            ),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   CustomSpacers.height74,
                 ],
               ),

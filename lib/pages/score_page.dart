@@ -19,6 +19,23 @@ class ScorePage extends StatefulWidget {
   State<ScorePage> createState() => _ScorePageState();
 }
 
+String _getAsset(String status) {
+  switch (status) {
+    case "Normal":
+      return AppImages.IMG_NORMAL;
+    case "Extremely Severe Depression":
+      return AppImages.IMG_Extremely_Severe_Depression;
+    case "Mild Depression":
+      return AppImages.IMG_Mild_Depression;
+    case "Moderate Depression":
+      return AppImages.IMG_Moderate_Depression;
+    case "Severe Depression":
+      return AppImages.IMG_Severe_Depression;
+    default:
+      return AppImages.IMG_NORMAL;
+  }
+}
+
 class _ScorePageState extends State<ScorePage> {
   @override
   Widget build(BuildContext context) {
@@ -63,7 +80,11 @@ class _ScorePageState extends State<ScorePage> {
                         roundedCap: (_, __) => true,
                       ),
                     ),
-                    const ImageIconView(assetPath: AppImages.IMG_SCORE_2)
+                    ImageIconView(
+                      assetPath: _getAsset(widget.scoreData.status),
+                      dHeight: 172,
+                      dWidth: 212,
+                    )
                   ],
                 ),
               ),

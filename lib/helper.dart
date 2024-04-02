@@ -3,7 +3,27 @@ import 'dart:ui';
 import 'package:depr_ai/data/question_model.dart';
 
 class Helper {
+  static List<Map<String, dynamic>> dummyQueData = [];
   static List<Map<String, dynamic>> data = [
+    {
+      "question": "What is your age in years?",
+      "type": "age",
+    },
+    {
+      "question": "What is your gender?",
+      "answer": ['Female', 'Male', 'Others'],
+      "type": "gender",
+    },
+    {
+      "question": "What is your Marital status?",
+      "answer": ['Married', 'Unmarried', 'Divorced', 'Widowed'],
+      "type": "maritalStatus",
+    },
+    {
+      "question": "What is your employment status?",
+      "answer": ['Employed', 'Unemployed'],
+      "type": "employmentStatus",
+    },
     {
       "question": "Little interest or pleasure in doing things",
       "answer": [
