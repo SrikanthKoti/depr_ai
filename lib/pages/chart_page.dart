@@ -4,17 +4,16 @@ import 'package:depr_ai/app/constants/app_styles.dart';
 import 'package:depr_ai/app/constants/custom_spacers.dart';
 import 'package:depr_ai/app/custom_http_client.dart';
 import 'package:depr_ai/app/router/custom_navigator.dart';
+import 'package:depr_ai/data/chart_data.dart';
 import 'package:depr_ai/data/submit_questioner_response_model.dart';
 import 'package:depr_ai/datasource/get_chart_data_datasource.dart';
 import 'package:depr_ai/datasource/response.dart';
 import 'package:depr_ai/ui/atoms/image_icon_view.dart';
-import 'package:depr_ai/ui/chart_container.dart';
-import 'package:depr_ai/ui/line_chart.dart';
-import 'package:depr_ai/ui/line_chart_one.dart';
-import 'package:fl_chart/fl_chart.dart';
+import 'package:depr_ai/ui/chart/custom_bubble_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class ChartPage extends StatefulWidget {
   const ChartPage({super.key});
@@ -28,19 +27,96 @@ class _ChartPageState extends State<ChartPage> {
   late GetChartDataDataSource getChartDataDataSource;
   bool isLoading = true;
   List<SubmitQuestionerResponse> chartData = [];
+
+  //----- Gender Data
+  List<BubbleSeries<ChartData, num>> genderBubbleSeries = [];
+
+  List<ChartData> maleData = [];
+  List<ChartData> femaleData = [];
+  List<ChartData> othersData = [];
+
+  void addGenderDataToList() {
+    genderBubbleSeries = [
+      BubbleSeries<ChartData, num>(
+        opacity: 0.7,
+        name: 'Male',
+        dataSource: maleData,
+        xValueMapper: (ChartData sales, _) => sales.xValue as num,
+        yValueMapper: (ChartData sales, _) => sales.y,
+        sizeValueMapper: (ChartData sales, _) => sales.size,
+      ),
+      BubbleSeries<ChartData, num>(
+        opacity: 0.7,
+        name: 'Female',
+        dataSource: femaleData,
+        xValueMapper: (ChartData sales, _) => sales.xValue as num,
+        yValueMapper: (ChartData sales, _) => sales.y,
+        sizeValueMapper: (ChartData sales, _) => sales.size,
+      ),
+      BubbleSeries<ChartData, num>(
+        opacity: 0.7,
+        name: 'Others',
+        dataSource: othersData,
+        xValueMapper: (ChartData sales, _) => sales.xValue as num,
+        yValueMapper: (ChartData sales, _) => sales.y,
+        sizeValueMapper: (ChartData sales, _) => sales.size,
+      ),
+    ];
+  }
+
+  void populateGenderData(SubmitQuestionerResponse data) {
+    if (data.gender == 'Male') {
+      maleData.add(
+        ChartData(
+          x: data.status,
+          y: data.age.toDouble(),
+          size: data.score.toDouble(),
+          xValue: data.score.toDouble(),
+          content: data,
+        ),
+      );
+    } else if (data.gender == 'Female') {
+      femaleData.add(
+        ChartData(
+          x: data.status,
+          y: data.age.toDouble(),
+          size: data.score.toDouble(),
+          xValue: data.score.toDouble(),
+          content: data,
+        ),
+      );
+    } else {
+      othersData.add(
+        ChartData(
+          x: data.status,
+          y: data.age.toDouble(),
+          size: data.score.toDouble(),
+          xValue: data.score.toDouble(),
+          content: data,
+        ),
+      );
+    }
+  }
+
+  //
   @override
   void initState() {
     client.initialise();
     getChartDataDataSource = GetChartDataDataSource(client: client);
     getData();
+
     super.initState();
   }
 
   void getData() async {
     Response res = await getChartDataDataSource.dataSourceMethod();
     if (res.isSuccess) {
+      chartData = res.data;
+      for (var data in chartData) {
+        populateGenderData(data);
+      }
+      addGenderDataToList();
       setState(() {
-        chartData = res.data;
         isLoading = false;
       });
     } else {
@@ -60,128 +136,37 @@ class _ChartPageState extends State<ChartPage> {
     CustomNavigator.pop(context);
   }
 
-  List<FlSpot> getChartData() {
-    List<FlSpot> spots = [];
-    for (var item in chartData) {
-      double x = item.age.toDouble();
-      double y = item.score.toDouble();
-      spots.add(FlSpot(x, y));
-    }
-    return spots;
-  }
-
-  FlBorderData get borderData => FlBorderData(
-        show: true,
-        border: Border(
-          bottom: BorderSide(color: AppColors.primary.withOpacity(0.2), width: 4),
-          left: const BorderSide(color: Colors.transparent),
-          right: const BorderSide(color: Colors.transparent),
-          top: const BorderSide(color: Colors.transparent),
-        ),
-      );
-  // List<LineChartBarData> get lineBarsData1 => [
-  //       lineChartBarData1_1,
-  //       lineChartBarData1_2,
-  //       lineChartBarData1_3,
-  //     ];
-  LineChartData get sampleData1 => LineChartData(
-        lineTouchData: lineTouchData1,
-        gridData: gridData,
-        titlesData: titlesData1,
-        borderData: borderData,
-        // lineBarsData: lineBarsData1,
-        minX: 0,
-        maxX: 14,
-        maxY: 4,
-        minY: 0,
-      );
-
-  FlTitlesData get titlesData1 => FlTitlesData(
-        bottomTitles: AxisTitles(
-          sideTitles: bottomTitles,
-        ),
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: leftTitles(),
-        ),
-      );
-  SideTitles leftTitles() => SideTitles(
-        getTitlesWidget: leftTitleWidgets,
-        showTitles: true,
-        interval: 1,
-        reservedSize: 40,
-      );
-
-  Widget leftTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 14,
-    );
-
-    return Text(value.toString(), style: style, textAlign: TextAlign.center);
-  }
-
-  SideTitles get bottomTitles => SideTitles(
-        showTitles: true,
-        reservedSize: 32,
-        interval: 1,
-        getTitlesWidget: bottomTitleWidgets,
-      );
-  Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 16,
-    );
-
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      space: 10,
-      child: Text(value.toString(), style: style),
-    );
-  }
-
-  FlGridData get gridData => const FlGridData(show: false);
-
-  LineTouchData get lineTouchData1 => LineTouchData(
-        handleBuiltInTouches: true,
-        touchTooltipData: LineTouchTooltipData(
-          getTooltipColor: (touchedSpot) => Colors.blueGrey.withOpacity(0.8),
-        ),
-      );
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.w),
+          padding: EdgeInsets.only(right: 24.w),
           child: Column(
             children: [
               CustomSpacers.height24,
-              GestureDetector(
-                onTap: () {
-                  _onbackPress();
-                },
-                child: Row(
-                  children: [
-                    ImageIconView(
-                      assetPath: AppImages.ICON_BACK,
-                      iconColor: AppColors.BLACK,
-                      dHeight: 12.h,
-                      dWidth: 16.w,
-                    ),
-                    CustomSpacers.width2,
-                    Text(
-                      "Back",
-                      style: AppStyles.s16_w500_black,
-                    )
-                  ],
+              Padding(
+                padding: EdgeInsets.only(left: 24.w),
+                child: GestureDetector(
+                  onTap: () {
+                    _onbackPress();
+                  },
+                  child: Row(
+                    children: [
+                      ImageIconView(
+                        assetPath: AppImages.ICON_BACK,
+                        iconColor: AppColors.BLACK,
+                        dHeight: 12.h,
+                        dWidth: 16.w,
+                      ),
+                      CustomSpacers.width2,
+                      Text(
+                        "Back",
+                        style: AppStyles.s16_w500_black,
+                      )
+                    ],
+                  ),
                 ),
               ),
               CustomSpacers.height32,
@@ -192,12 +177,17 @@ class _ChartPageState extends State<ChartPage> {
               else
                 Column(
                   children: [
-                    Text(chartData.length.toString(), style: AppStyles.s64_bold_black),
-                    LineChartSample1(),
-                    ChartContainer(
-                      title: 'Line Chart',
-                      color: AppColors.C_28CBB0,
-                      chart: LineChartContent(),
+                    SizedBox(
+                      height: 350.h,
+                      child: Center(
+                        child: CustomBubbleChart(
+                          isCardView: false,
+                          title: 'Gender based analysis',
+                          primaryXAxisTitle: 'Depression Score',
+                          primaryYAxisTitle: 'Age',
+                          multipleBubbleSeries: genderBubbleSeries,
+                        ),
+                      ),
                     ),
                   ],
                 )

@@ -36,6 +36,12 @@ class AppStyles {
     color: AppColors.WHITE,
     fontFamily: _fontFamily,
   );
+  static TextStyle s10_w500_white = TextStyle(
+    fontSize: 10.sp,
+    fontWeight: FontWeight.w500,
+    color: AppColors.WHITE,
+    fontFamily: _fontFamily,
+  );
   static TextStyle s16_blod_black = TextStyle(
     fontSize: 16.sp,
     fontWeight: FontWeight.w700,
