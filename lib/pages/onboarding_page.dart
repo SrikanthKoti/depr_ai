@@ -9,6 +9,7 @@ import 'package:depr_ai/datasource/flag_questioner_datasource.dart';
 import 'package:depr_ai/ui/atoms/floating_next_button.dart';
 import 'package:depr_ai/ui/atoms/image_icon_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
@@ -52,7 +53,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
         timeInSecForIosWeb: 1,
         backgroundColor: Colors.red,
         textColor: Colors.white,
-        fontSize: 16.0,
+        fontSize: 16.sp,
       );
     }
   }
@@ -72,7 +73,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
                 decoration: const BoxDecoration(color: AppColors.WHITE),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

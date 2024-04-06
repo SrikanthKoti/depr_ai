@@ -1,5 +1,6 @@
 import 'package:depr_ai/app/router/app_pages.dart';
 import 'package:depr_ai/datasource/submit_questioner_datasource.dart';
+import 'package:depr_ai/pages/chart_page.dart';
 import 'package:depr_ai/pages/home_page.dart';
 import 'package:depr_ai/pages/onboarding_page.dart';
 import 'package:depr_ai/pages/score_page.dart';
@@ -16,6 +17,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (context) => const HomePage());
       case AppPages.pageOnboarding:
         return MaterialPageRoute(builder: (context) => const OnboardingPage());
+      case AppPages.pageChart:
+        return MaterialPageRoute(builder: (context) => const ChartPage());
       case AppPages.pageScore:
         var args = settings.arguments != null ? settings.arguments as Map<String, dynamic> : {};
         return MaterialPageRoute(

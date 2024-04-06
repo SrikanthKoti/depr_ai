@@ -2,6 +2,7 @@ import 'package:depr_ai/app/constants/app_colors.dart';
 import 'package:depr_ai/app/constants/app_styles.dart';
 import 'package:depr_ai/app/constants/custom_spacers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../ui/atoms/image_icon_view.dart';
 
@@ -20,12 +21,12 @@ class FloatingNextButton extends StatelessWidget {
     return GestureDetector(
       onTap: isDisabled ? null : onTap,
       child: Container(
-        width: 342,
-        height: 50,
-        margin: const EdgeInsets.only(bottom: 24),
+        width: 342.w,
+        height: 50.h,
+        margin: EdgeInsets.only(bottom: 24.h),
         decoration: BoxDecoration(
           color: isDisabled ? AppColors.F6A5CA.withOpacity(0.3) : AppColors.F6A5CA,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(10.r),
           border: isDisabled
               ? null
               : Border.all(

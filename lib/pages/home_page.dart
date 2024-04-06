@@ -16,6 +16,7 @@ import 'package:depr_ai/ui/atoms/image_icon_view.dart';
 import 'package:depr_ai/ui/atoms/option.dart';
 import 'package:depr_ai/ui/atoms/progress_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
@@ -147,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                       timeInSecForIosWeb: 1,
                       backgroundColor: Colors.red,
                       textColor: Colors.white,
-                      fontSize: 16.0,
+                      fontSize: 16.sp,
                     );
                   }
                   if (context.mounted) {
@@ -167,7 +168,7 @@ class _HomePageState extends State<HomePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
+                          padding: EdgeInsets.only(left: 24.w, right: 24.w, top: 24.h),
                           child: Stack(
                             alignment: Alignment.center,
                             children: [
@@ -178,11 +179,11 @@ class _HomePageState extends State<HomePage> {
                                   },
                                   child: Row(
                                     children: [
-                                      const ImageIconView(
+                                      ImageIconView(
                                         assetPath: AppImages.ICON_BACK,
                                         iconColor: AppColors.BLACK,
-                                        dHeight: 12,
-                                        dWidth: 16,
+                                        dHeight: 12.h,
+                                        dWidth: 16.w,
                                       ),
                                       CustomSpacers.width2,
                                       Text(
@@ -210,10 +211,10 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          padding: EdgeInsets.symmetric(horizontal: 24.w),
                           child: ProgressBar(
                             dValue: (currentQue + 1) / questions.length,
-                            dHeight: 3,
+                            dHeight: 3.h,
                             progressBarSize: ProgressBarSizes.small,
                             bShowLabel: true,
                             showLabelToTheRight: true,
@@ -226,7 +227,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         CustomSpacers.height36,
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          padding: EdgeInsets.symmetric(horizontal: 24.w),
                           child: Text(
                             questions[currentQue].question,
                             style: AppStyles.s36_w500_black,
@@ -234,7 +235,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         CustomSpacers.height14,
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          padding: EdgeInsets.symmetric(horizontal: 24.w),
                           child: Text(
                             questions[currentQue].type != QuestionType.age
                                 ? "Select any one"
@@ -261,29 +262,29 @@ class _HomePageState extends State<HomePage> {
                     }),
                   if (questions[currentQue].type == QuestionType.age)
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      padding: EdgeInsets.symmetric(horizontal: 24.h),
                       child: TextFormField(
                         keyboardType: TextInputType.number,
                         onChanged: (val) {
                           _onOptionSelect(int.tryParse(val) ?? 0);
                         },
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           hintText: "Age",
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: AppColors.C_28CBB0),
+                            borderSide: const BorderSide(color: AppColors.C_28CBB0),
                             borderRadius: BorderRadius.all(
-                              Radius.circular(12),
+                              Radius.circular(12.r),
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: AppColors.DADADA),
+                            borderSide: const BorderSide(color: AppColors.DADADA),
                             borderRadius: BorderRadius.all(
-                              Radius.circular(12),
+                              Radius.circular(12.r),
                             ),
                           ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(
-                              Radius.circular(12),
+                              Radius.circular(12.r),
                             ),
                           ),
                         ),
