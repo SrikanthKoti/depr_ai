@@ -9,6 +9,7 @@ class CustomBubbleChart extends StatefulWidget {
   final String primaryXAxisTitle;
   final String primaryYAxisTitle;
   final List<BubbleSeries<ChartData, num>> multipleBubbleSeries;
+  final TooltipBehavior? tooltipBehavior;
   const CustomBubbleChart({
     super.key,
     required this.isCardView,
@@ -16,6 +17,7 @@ class CustomBubbleChart extends StatefulWidget {
     required this.primaryXAxisTitle,
     required this.primaryYAxisTitle,
     required this.multipleBubbleSeries,
+    required this.tooltipBehavior,
   });
 
   @override
@@ -23,29 +25,6 @@ class CustomBubbleChart extends StatefulWidget {
 }
 
 class _CustomBubbleChartState extends State<CustomBubbleChart> {
-  TooltipBehavior? _tooltipBehavior;
-  @override
-  void initState() {
-    _tooltipBehavior = TooltipBehavior(
-      enable: true,
-      header: '',
-      canShowMarker: false,
-      builder: (data, point, series, pointIndex, seriesIndex) {
-        data = data as ChartData;
-        return Padding(
-          padding: const EdgeInsets.all(2.0),
-          child: Text(
-            'Age : ${data.content.age}\nGender : ${data.content.gender}\nStatus : ${data.content.status}',
-            style: AppStyles.s10_w500_white,
-          ),
-        );
-      },
-      // format: 'Age : point.y%\nGender : point.x\nStatus : point.size',
-    );
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return SfCartesianChart(
@@ -55,6 +34,7 @@ class _CustomBubbleChartState extends State<CustomBubbleChart> {
       zoomPanBehavior: ZoomPanBehavior(
         zoomMode: ZoomMode.xy,
         enablePinching: true,
+        enableSelectionZooming: true,
         enablePanning: true,
       ),
       title: ChartTitle(
@@ -75,7 +55,7 @@ class _CustomBubbleChartState extends State<CustomBubbleChart> {
       series: widget.multipleBubbleSeries,
       legend: Legend(
           isVisible: widget.isCardView ? false : true, overflowMode: LegendItemOverflowMode.wrap),
-      tooltipBehavior: _tooltipBehavior,
+      tooltipBehavior: widget.tooltipBehavior,
     );
   }
 }
