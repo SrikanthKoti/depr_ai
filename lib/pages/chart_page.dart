@@ -40,7 +40,7 @@ class _ChartPageState extends State<ChartPage> {
     genderBubbleSeries = [
       BubbleSeries<ChartData, num>(
         opacity: 0.7,
-        name: 'Male',
+        name: 'Male (${maleData.length})',
         dataSource: maleData,
         xValueMapper: (ChartData sales, _) => sales.xValue as num,
         yValueMapper: (ChartData sales, _) => sales.y,
@@ -48,7 +48,7 @@ class _ChartPageState extends State<ChartPage> {
       ),
       BubbleSeries<ChartData, num>(
         opacity: 0.7,
-        name: 'Female',
+        name: 'Female (${femaleData.length})',
         dataSource: femaleData,
         xValueMapper: (ChartData sales, _) => sales.xValue as num,
         yValueMapper: (ChartData sales, _) => sales.y,
@@ -56,7 +56,7 @@ class _ChartPageState extends State<ChartPage> {
       ),
       BubbleSeries<ChartData, num>(
         opacity: 0.7,
-        name: 'Others',
+        name: 'Others (${othersData.length})',
         dataSource: othersData,
         xValueMapper: (ChartData sales, _) => sales.xValue as num,
         yValueMapper: (ChartData sales, _) => sales.y,
@@ -113,7 +113,7 @@ class _ChartPageState extends State<ChartPage> {
     maritalBubbleSeries = [
       BubbleSeries<ChartData, num>(
         opacity: 0.7,
-        name: 'Married',
+        name: 'Married (${mariedData.length})',
         dataSource: mariedData,
         xValueMapper: (ChartData sales, _) => sales.xValue as num,
         yValueMapper: (ChartData sales, _) => sales.y,
@@ -121,7 +121,7 @@ class _ChartPageState extends State<ChartPage> {
       ),
       BubbleSeries<ChartData, num>(
         opacity: 0.7,
-        name: 'Unmarried',
+        name: 'Unmarried (${unMariedData.length})',
         dataSource: unMariedData,
         xValueMapper: (ChartData sales, _) => sales.xValue as num,
         yValueMapper: (ChartData sales, _) => sales.y,
@@ -129,7 +129,7 @@ class _ChartPageState extends State<ChartPage> {
       ),
       BubbleSeries<ChartData, num>(
         opacity: 0.7,
-        name: 'Divorced',
+        name: 'Divorced (${divorcedData.length})',
         dataSource: divorcedData,
         xValueMapper: (ChartData sales, _) => sales.xValue as num,
         yValueMapper: (ChartData sales, _) => sales.y,
@@ -137,7 +137,7 @@ class _ChartPageState extends State<ChartPage> {
       ),
       BubbleSeries<ChartData, num>(
         opacity: 0.7,
-        name: 'Widowed',
+        name: 'Widowed (${widowedData.length})',
         dataSource: widowedData,
         xValueMapper: (ChartData sales, _) => sales.xValue as num,
         yValueMapper: (ChartData sales, _) => sales.y,
@@ -201,7 +201,7 @@ class _ChartPageState extends State<ChartPage> {
     emplpoymentBubbleSeries = [
       BubbleSeries<ChartData, num>(
         opacity: 0.7,
-        name: 'Employed',
+        name: 'Employed (${employedData.length})',
         dataSource: employedData,
         xValueMapper: (ChartData sales, _) => sales.xValue as num,
         yValueMapper: (ChartData sales, _) => sales.y,
@@ -209,7 +209,7 @@ class _ChartPageState extends State<ChartPage> {
       ),
       BubbleSeries<ChartData, num>(
         opacity: 0.7,
-        name: 'Unemployed',
+        name: 'Unemployed (${unEmployedData.length})',
         dataSource: unEmployedData,
         xValueMapper: (ChartData sales, _) => sales.xValue as num,
         yValueMapper: (ChartData sales, _) => sales.y,
@@ -280,10 +280,9 @@ class _ChartPageState extends State<ChartPage> {
       addGenderDataToList();
       addMaritalDataToList();
       addEmploymentDataToList();
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {
-          isLoading = false;
-        });
+
+      setState(() {
+        isLoading = false;
       });
     } else {
       Fluttertoast.showToast(

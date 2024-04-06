@@ -8,6 +8,7 @@ import 'package:depr_ai/app/router/custom_navigator.dart';
 import 'package:depr_ai/datasource/flag_questioner_datasource.dart';
 import 'package:depr_ai/ui/atoms/floating_next_button.dart';
 import 'package:depr_ai/ui/atoms/image_icon_view.dart';
+import 'package:el_tooltip/el_tooltip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -25,13 +26,16 @@ class OnboardingPage extends StatefulWidget {
 class _OnboardingPageState extends State<OnboardingPage> {
   final CustomHttpClient client = CustomHttpClient();
   late FlagQuestionerDataSource falgDataSource;
+  ElTooltipController cont = ElTooltipController();
   bool hasPaidMoney = true;
   @override
   void initState() {
     client.initialise();
     falgDataSource = FlagQuestionerDataSource(client: client);
-
     super.initState();
+    Future.delayed(const Duration(seconds: 1), () async {
+      cont.show();
+    });
   }
 
   void callMoneyFlag() async {
@@ -63,6 +67,34 @@ class _OnboardingPageState extends State<OnboardingPage> {
     return LoaderOverlay(
       child: SafeArea(
         child: Scaffold(
+          floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+          floatingActionButton: ElTooltip(
+            controller: cont,
+            content: const Text("Click to see graphical analysis of all tests"),
+            position: ElTooltipPosition.leftCenter,
+            child: Padding(
+              padding: EdgeInsets.only(top: 24.h, right: 12.w),
+              child: IconButton.filled(
+                onPressed: () {
+                  CustomNavigator.pushTo(context, AppPages.pageChart);
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith(
+                    (states) => AppColors.F6A5CA,
+                  ),
+                  shape: MaterialStateProperty.resolveWith(
+                    (states) => RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                  ),
+                ),
+                icon: Icon(
+                  Icons.stacked_line_chart_rounded,
+                  size: 32.sp,
+                ),
+              ),
+            ),
+          ),
           backgroundColor: AppColors.C3E9E4,
           body: Column(
             mainAxisAlignment: MainAxisAlignment.end,

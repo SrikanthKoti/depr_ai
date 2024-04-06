@@ -45,6 +45,7 @@ dependencies:
   loader_overlay: ^4.0.0
   flutter_screenutil: ^5.7.0
   syncfusion_flutter_charts: ^25.1.38
+  el_tooltip: ^2.0.0
 
 dev_dependencies:
   flutter_test:

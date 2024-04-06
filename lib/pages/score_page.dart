@@ -67,7 +67,7 @@ class _ScorePageState extends State<ScorePage> {
                           padding: EdgeInsets.only(top: 32.h, bottom: 32.h),
                           child: CircularStepProgressIndicator(
                             totalSteps: 100,
-                            currentStep: 74,
+                            currentStep: widget.scoreData.score,
                             stepSize: 10,
                             selectedColor: AppColors.C_28CBB0,
                             unselectedColor: Colors.grey[200],
@@ -125,7 +125,7 @@ class _ScorePageState extends State<ScorePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('You suffered from:', style: AppStyles.s16_w500_747474),
+                    Text('Your emotional state is:', style: AppStyles.s16_w500_747474),
                     CustomSpacers.height4,
                     Text(widget.scoreData.status, style: AppStyles.s20_w500_black),
                     CustomSpacers.height12,
